@@ -1,0 +1,88 @@
+#!/usr/bin/env python2
+
+###############################################################
+# Name : GTK2 GIT Mirroring Tool
+# Author : debuggerboy a.k.a "Anish Asokan"
+# Description : An Ugly Hack to Mirrot (migrate) git from one 
+#               repo to another repo.
+# Warning : USE AT YOUR OWN RISK
+#
+# License:
+#
+# GNU General Public License, version 2
+#
+# Copyright (C) 1989, 1991 Free Software Foundation, Inc.  
+# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+# 
+# Everyone is permitted to copy and distribute verbatim copies
+# of this license document, but changing it is not allowed.
+#
+###############################################################
+
+import gtk
+import os
+class PyApp(gtk.Window):
+   def __init__(self):
+      super(PyApp, self).__init__()
+      self.set_title("GIT Mirror Tool")
+      self.set_default_size(400,300)
+      self.set_position(gtk.WIN_POS_CENTER)
+
+      gitSysUser = os.popen('git config --get user.name').read()
+      gitSysEmail = os.popen('git config --get user.email').read()
+		
+      self.label1 = gtk.Label("Source GIT Repo URL")
+      self.entry1 = gtk.Entry()
+      self.label2 = gtk.Label("Destination GIT Repo URL")
+      self.entry2 = gtk.Entry()
+      self.label3 = gtk.Label("GIT Username")
+      self.label4 = gtk.Label(gitSysUser)
+      self.label5 = gtk.Label("GIT Email ID")
+      self.label6 = gtk.Label(gitSysEmail)
+		
+      self.btn = gtk.Button("Start GIT Mirroring")
+      self.btn.connect("clicked",self.mirror)
+		
+      fixed = gtk.Fixed()
+      fixed.put(self.label1, 10,16)
+      fixed.put(self.entry1, 200,10)
+      fixed.put(self.label2, 10,65)
+      fixed.put(self.entry2, 200,59)
+      fixed.put(self.label3, 10,114)
+      fixed.put(self.label4, 200,108)
+      fixed.put(self.label5, 10,163)
+      fixed.put(self.label6, 200,157)
+      fixed.put(self.btn,200,206)
+		
+      self.add(fixed)
+      self.show_all()
+		
+   def mirror(self,widget):
+      #print "hello",self.entry1.get_text()
+      #print "hello",self.entry2.get_text()
+      gitSrcRepo=self.entry1.get_text()
+      gitTgtRepo=self.entry2.get_text()
+      #print gitSrcRepo
+      #print gitTgtRepo
+      os.system("mkdir -vp /tmp/git_mir_tool/$(date +%F)")
+      os.system("GIT_SSH_COMMAND='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' git clone --bare " + gitSrcRepo + " /tmp/git_mir_tool/$(date +%F)/source")
+      os.system("ls -l /tmp/git_mir_tool/$(date +%F)/source")
+      os.system("cd /tmp/git_mir_tool/$(date +%F)/source && GIT_SSH_COMMAND='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' git push --mirror " + gitTgtRepo)
+      os.system("rm -rf /tmp/git_mir_tool")
+      md = gtk.MessageDialog(self, gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_INFO, gtk.BUTTONS_CLOSE, "Mirroring completed successfully")
+      md.run()
+      md.destroy()
+      
+
+#   def done(self,widget):
+#      md = gtk.MessageDialog(self, gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_INFO, gtk.BUTTONS_CLOSE, "Mirroring completed successfully")
+#      md.run()
+#      md.destroy()
+
+#   def error(self,widget):
+#      md = gtk.MessageDialog(self, gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_ERROR, gtk.BUTTONS_CLOSE, "Error Mirroring Repositories")
+#      md.run()
+#      md.destroy()
+
+PyApp()
+gtk.main()
