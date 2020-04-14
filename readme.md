@@ -6,9 +6,18 @@ Ugly hack to mirror a git repo to another using a GTK (PyGTK) application.
 
 USE AT YOUR OWN RISK
 
+## Dependencies
+
+Python-GTK2 is required on your computer.
+
+### Python-GTK2 install on Debian
+
+```sudo apt update && sudo apt install python-gtk2```
+
 ## Usage
 
-Screenshot: 
 ![alt text][logo]
 
 [logo]: https://github.com/debuggerboy/gtk-git-mirror-tool/raw/master/screenshot-01.png
+
+Clone the application
