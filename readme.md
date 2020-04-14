@@ -16,8 +16,16 @@ Python-GTK2 is required on your computer.
 
 ## Usage
 
+Clone the application
+
+Navigate into the newly cloned directory
+
+Invoke: `python git-mig-wiz`
+
+Now you should see a application window like below.
+
 ![alt text][logo]
 
 [logo]: https://github.com/debuggerboy/gtk-git-mirror-tool/raw/master/screenshot-01.png
 
-Clone the application
+
